@@ -24,7 +24,7 @@ const LoadingFallback: React.FC = () => (
 );
 
 const ErrorFallback: React.FC<{ error?: Error }> = ({ error }) => (
-  <Card className="bg-music-card border-border/30 border-destructive/20 mx-4 my-8">
+  <Card className="bg-music-card  mx-4 my-8">
     <CardContent className="py-12 text-center">
       <Music2 className="w-16 h-16 text-destructive/60 mx-auto mb-4" />
       <h3 className="text-lg font-semibold mb-2 text-destructive">

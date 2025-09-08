@@ -132,7 +132,7 @@ const MusicFilters: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 pt-4 border-t border-border/20">
           <div>
-            <label className="text-sm font-medium mb-2 block flex items-center gap-2">
+            <label className="text-sm font-medium mb-2  items-center gap-2">
               <ArrowUpDown className="w-4 h-4" />
               Sort by
             </label>
