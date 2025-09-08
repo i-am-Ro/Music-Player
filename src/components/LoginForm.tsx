@@ -54,7 +54,7 @@ const LoginForm: React.FC = () => {
       <Card className="w-full max-w-md  border-border/50 shadow-2xl">
         <CardHeader className="text-center space-y-4">
           <div className="mx-auto w-16 h-16 bg-gradient-to-r from-music-primary to-music-secondary rounded-2xl flex items-center justify-center">
-            <img src="/public/player.png" />
+            <img src="/chord-chain/public/player.png" />
           </div>
           <CardTitle className="text-purple-600  font-bold  ">
             MusicStream

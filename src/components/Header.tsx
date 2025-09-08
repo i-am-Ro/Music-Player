@@ -8,7 +8,11 @@ const Header: React.FC = () => {
     <header className="bg-gray-900 text-white p-4 flex items-center justify-between">
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 bg-purple-600 rounded flex items-center justify-center">
-          <img src="/public/player.png" alt="Logo" className="w-6 h-6" />
+          <img
+            src="/chord-chain/public/player.png"
+            alt="Logo"
+            className="w-6 h-6"
+          />
         </div>
         <div>
           <h1 className="text-lg font-bold">MusicStream</h1>
