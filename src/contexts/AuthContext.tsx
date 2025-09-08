@@ -1,9 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
+export type Role = "admin" | "user";
+
 export interface User {
   id: string;
   username: string;
-  role: "admin" | "user";
+  role: Role;
 }
 
 interface AuthContextType {
@@ -16,31 +18,36 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const base64Encode = (obj: object) => btoa(JSON.stringify(obj));
+const base64Decode = (str: string) => JSON.parse(atob(str));
+
 const createMockToken = (user: User): string => {
+  const header = { alg: "HS256", typ: "JWT" };
   const payload = {
     id: user.id,
     username: user.username,
     role: user.role,
-    iat: Date.now(),
-    exp: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
+    iat: Math.floor(Date.now() / 1000),
+    exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60,
   };
 
-  return btoa(JSON.stringify(payload));
+  const encodedHeader = base64Encode(header);
+  const encodedPayload = base64Encode(payload);
+  const fakeSignature = btoa("secret" + encodedHeader + encodedPayload);
+
+  return `${encodedHeader}.${encodedPayload}.${fakeSignature}`;
 };
 
 const validateToken = (token: string): User | null => {
   try {
-    const payload = JSON.parse(atob(token));
+    const [encodedHeader, encodedPayload] = token.split(".");
+    if (!encodedHeader || !encodedPayload) return null;
 
-    if (payload.exp < Date.now()) {
-      return null;
-    }
+    const payload = base64Decode(encodedPayload);
 
-    return {
-      id: payload.id,
-      username: payload.username,
-      role: payload.role,
-    };
+    if (payload.exp * 1000 < Date.now()) return null;
+
+    return { id: payload.id, username: payload.username, role: payload.role };
   } catch {
     return null;
   }
@@ -60,11 +67,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const token = localStorage.getItem("music_app_token");
     if (token) {
       const validatedUser = validateToken(token);
-      if (validatedUser) {
-        setUser(validatedUser);
-      } else {
-        localStorage.removeItem("music_app_token");
-      }
+      if (validatedUser) setUser(validatedUser);
+      else localStorage.removeItem("music_app_token");
     }
   }, []);
 
@@ -75,21 +79,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const mockUser = mockUsers.find(
       (u) => u.username === username && u.password === password
     );
+    if (!mockUser) return false;
 
-    if (mockUser) {
-      const user = {
-        id: mockUser.id,
-        username: mockUser.username,
-        role: mockUser.role,
-      };
-
-      const token = createMockToken(user);
-      localStorage.setItem("music_app_token", token);
-      setUser(user);
-      return true;
-    }
-
-    return false;
+    const user = {
+      id: mockUser.id,
+      username: mockUser.username,
+      role: mockUser.role,
+    };
+    const token = createMockToken(user);
+    localStorage.setItem("music_app_token", token);
+    setUser(user);
+    return true;
   };
 
   const logout = () => {
@@ -110,10 +110,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
+// ---------------- Hook ----------------
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
+  if (!context) throw new Error("useAuth must be used within AuthProvider");
   return context;
 };
