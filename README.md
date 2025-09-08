@@ -67,10 +67,14 @@ A modern music streaming application built with React, featuring micro frontend 
 - **Password**: `user123`
 - **Permissions**: Can view, filter, and sort songs only
 
-Deployment on Netlify
+🚀 Deployment on Netlify
 1️⃣ Deploy Main App
+
 Build the app for production:
+
 npm run build
+
+
 Go to Netlify
  and log in.
 
@@ -84,7 +88,7 @@ Set publish directory: dist
 
 Click Deploy Site
 
-After deployment, copy the site URL .
+After deployment, copy the site URL (this is your main app URL).
 
 ## 🏗️ Micro Frontend Architecture
 
