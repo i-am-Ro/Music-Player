@@ -107,10 +107,8 @@ const MusicLibrary: React.FC = () => {
         {isAdmin && <AddSongForm />}
       </div>
 
-      {/* Filters */}
       <MusicFilters />
 
-      {/* Songs Display */}
       {filteredSongs.length === 0 ? (
         <Card className="bg-music-card border-border/30">
           <CardContent className="py-12 text-center">
